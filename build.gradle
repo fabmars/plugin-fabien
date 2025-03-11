@@ -85,6 +85,10 @@ dependencies {
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testImplementation "io.micronaut:micronaut-jackson-databind"
 
+    // influx
+    implementation("com.influxdb:influxdb-client-java:7.2.0")
+
+
     // test deps needed only for to have a runner
     testAnnotationProcessor group: "io.kestra", name: "processor", version: kestraVersion
     testImplementation group: "io.kestra", name: "core", version: kestraVersion

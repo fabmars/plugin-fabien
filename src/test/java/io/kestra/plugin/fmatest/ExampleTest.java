@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates;
+package io.kestra.plugin.fmatest;
 
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.property.Property;
@@ -25,6 +25,8 @@ class ExampleTest {
 
     @Test
     void run() throws Exception {
+        // ressemble à spring batch
+
         RunContext runContext = runContextFactory.of(Map.of("variable", "John Doe"));
 
         Example task = Example.builder()
@@ -32,6 +34,7 @@ class ExampleTest {
             .build();
 
         Example.Output runOutput = task.run(runContext);
+
 
         assertThat(runOutput.getChild().getValue(), is(StringUtils.reverse("Hello John Doe")));
     }
