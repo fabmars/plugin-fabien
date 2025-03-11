@@ -3,7 +3,7 @@ namespace: io.kestra.fmatest
 
 tasks:
 - id: measurements
-  type: io.kestra.plugin.fmatest.
+  type: io.kestra.plugin.fmatest.WireFormatWrite
   format: "{{uri}}"
 - id: query
   type: io.kestra.plugin.fmatest.QueryTask

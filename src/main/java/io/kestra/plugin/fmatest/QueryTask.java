@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.io.File;
 import java.net.URI;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,29 +62,32 @@ public class QueryTask {
         String flux = "from(bucket:\"%s\") |> range(start: 0)".formatted(InfluxFactory.bucket);
 
         QueryApi queryApi = influxDBClient.getQueryApi();
-        List<String> lines = new ArrayList<>();
+        List<Temperature> lines = new ArrayList<>();
 
         List<FluxTable> tables = queryApi.query(flux);
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
 
             for (FluxRecord fluxRecord : records) {
-                String line = (String)fluxRecord.getValueByKey("_value");
-                logger.info(fluxRecord.getTime() + ": " + line);
-                lines.add(line);
+                String location = (String)fluxRecord.getValueByKey("location");
+                Double value = (Double)fluxRecord.getValueByKey("_value");
+                Instant time = (Instant)fluxRecord.getValueByKey("_time");
+
+                Temperature rec = new Temperature(location, value, time);
+                logger.info(rec.toString());
+                lines.add(rec);
             }
         }
         influxDBClient.close();
 
         return switch (fetchType) {
             case STORE -> {
+                //TODO put whatever should go there
                 File storedFile = File.createTempFile("query", ""); // sorry for your loss
                 URI uri = runContext.storage().putFile(storedFile);
                 yield Output.ofUri(uri);
             }
-            case FETCH -> {
-                yield Output.ofRawData(lines);
-            }
+            case FETCH -> Output.ofRawData(lines);
             default -> throw new UnsupportedOperationException("Unsupported fetch type: " + fetchType);
         };
     }
@@ -96,16 +100,16 @@ public class QueryTask {
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(title = "The fetched lines.")
         private final FetchType fetchType;
-        private final List<String> lines;
+        private final List<Temperature> lines;
         private final URI uri;
 
-        private Output(FetchType fetchType, List<String> lines, URI uri) {
+        private Output(FetchType fetchType, List<Temperature> lines, URI uri) {
             this.fetchType = fetchType;
             this.lines = lines;
             this.uri = uri;
         }
 
-        public static Output ofRawData(List<String> lines) {
+        public static Output ofRawData(List<Temperature> lines) {
           return new Output(FetchType.FETCH, Collections.unmodifiableList(lines), null);
         }
 

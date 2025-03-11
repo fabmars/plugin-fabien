@@ -57,7 +57,7 @@ class QueryTest {
 
         assertEquals(FetchType.FETCH, output.getFetchType());
         assertNull(output.getUri());
-        List<String> lines = output.getLines();
+        List<Temperature> lines = output.getLines();
         assertNotNull(lines);
         //TODO test what's out
     }

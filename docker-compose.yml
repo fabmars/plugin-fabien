@@ -1,13 +1,19 @@
 services:
   influx:
     container_name: influx-testfma
-    image: influxdb:1.11
+    image: influxdb:2
     ports:
       - "8086:8086"
     networks:
       - testfma
     environment:
       INFLUXDB_HTTP_FLUX_ENABLED: true
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: fabien
+      DOCKER_INFLUXDB_INIT_PASSWORD: youwish42
+      DOCKER_INFLUXDB_INIT_ORG: testfma
+      DOCKER_INFLUXDB_INIT_BUCKET: testfma-bucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: testfma-token
 
 networks:
   testfma:
