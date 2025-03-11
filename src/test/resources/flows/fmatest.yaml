@@ -2,12 +2,9 @@ id: example
 namespace: io.kestra.fmatest
 
 tasks:
-- id: date
-  type: io.kestra.plugin.fmatest.Example
-  format: "{{taskrun.startDate}}"
-- id: task-id
-  type: io.kestra.plugin.fmatest.Example
-  format: "{{task.id}}"
-- id: flow-id
-  type: io.kestra.plugin.fmatest.Example
-  format: "{{outputs['task-id'].child.value}}"
+- id: measurements
+  type: io.kestra.plugin.fmatest.
+  format: "{{uri}}"
+- id: query
+  type: io.kestra.plugin.fmatest.QueryTask
+  format: "{{fetchType}}"

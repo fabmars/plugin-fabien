@@ -6,6 +6,7 @@ import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
+import io.kestra.plugin.fmatest.WireFormatWrite.Output;
 import jakarta.inject.Inject;
 import java.net.URL;
 import java.util.Map;
@@ -17,9 +18,15 @@ class WireFormatWriteTest {
     private RunContextFactory runContextFactory;
 
     @Test
-    void run() throws Exception {
+    void should_write_measurements() throws Exception {
         // ok ressemble à spring batch
 
+        Output runOutput = execWrite(runContextFactory);
+
+        assertEquals(2, runOutput.getCount());
+    }
+
+    public static Output execWrite(RunContextFactory runContextFactory) throws Exception {
         URL resource = WireFormatWriteTest.class.getClassLoader().getResource("data/wires.lst");
         RunContext runContext = runContextFactory.of(Map.of("uri", resource.toURI().toString()));
 
@@ -27,8 +34,6 @@ class WireFormatWriteTest {
             .from(new Property<>("{{uri}}")) // no idea what I'm doing here
             .build();
 
-        WireFormatWrite.Output runOutput = task.run(runContext);
-
-        assertEquals(2, runOutput.getCount());
+        return task.run(runContext);
     }
 }

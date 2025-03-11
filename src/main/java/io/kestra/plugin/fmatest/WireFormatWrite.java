@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,7 +33,7 @@ import org.slf4j.Logger;
     examples = {
         @io.kestra.core.models.annotations.Example(
             title = "WireFormatWrite",
-            code = { "format: \"Text to be reverted\"" }
+            code = { "uri: \"URI to the input file\"" }
         )
     }
 )
